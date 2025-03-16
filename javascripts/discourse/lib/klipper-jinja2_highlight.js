@@ -2,7 +2,7 @@
 Language: Klipper Configuration with Jinja2 Macros
 Description: Syntax highlighting for Klipper configuration files and Jinja2 templating.
 Author: Sineos
-Version: 0.1
+Version: 0.2
 */
 
 export default function (hljs) {
@@ -48,29 +48,31 @@ export default function (hljs) {
     literal: "true false none null",
   };
 
+  const KLIPPER_COMMENT = {
+    scope: "comment",
+    begin: /[#;]/,
+    end: /$/,
+  };
+
   // Klipper configuration section
   const KLIPPER_SECTION = {
     scope: "section",
     begin: /^\[[^\]]+\]/,
-    end: /$/,
+    end: /(?=\n\[|\n$)/,
     contains: [
       {
-        scope: "title",
-        begin: /\[/,
-        end: /\]/,
+        scope: "section_title",
+        begin: /\[[^\]]+\]/,
       },
       {
         scope: "attr",
-        begin: /\w+/,
+        begin: /^\s*[a-zA-Z_]+(?=\s*:)/m,
         end: /[:=]/,
         relevance: 0,
         keywords: KLIPPER_KEYWORDS,
       },
-      {
-        scope: "string",
-        begin: /["']/,
-        end: /["']/,
-      },
+      KLIPPER_COMMENT,
+      hljs.HASH_COMMENT_MODE,
       hljs.inherit(hljs.NUMBER_MODE, { scope: "number" }),
       {
         scope: "literal",
