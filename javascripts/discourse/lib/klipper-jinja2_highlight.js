@@ -2,11 +2,11 @@
 Language: Klipper Configuration with Jinja2 Macros
 Description: Syntax highlighting for Klipper configuration files and Jinja2 templating.
 Author: Sineos
-Version: 0.2
+Version: 0.3
 */
 
 export default function (hljs) {
-  // Klipper configuration keywords
+  // Klipper Configuration Keywords
   const KLIPPER_KEYWORDS = {
     keyword:
       "accel bed_level bed_mesh bed_screws bed_tilt bltouch " +
@@ -27,16 +27,21 @@ export default function (hljs) {
     literal: "false null true none",
 
     built_in:
-      "BED_MESH_CALIBRATE CANCEL_PRINT DELTA_CALIBRATE FIRMWARE_RESTART " +
-      "G0 G1 G2 G3 G17 G18 G19 G28 G90 G91 G92 M18 M73 M82 M83 M84 M104 " +
-      "M105 M106 M107 M109 M112 M114 M115 M117 M140 M190 M191 M204 M220 " +
-      "M221 PAUSE PID_CALIBRATE QUAD_GANTRY_LEVEL RESUME SAVE_CONFIG " +
-      "SET_GCODE_OFFSET SET_HEATER_TEMPERATURE SET_PRESSURE_ADVANCE " +
-      "SET_VELOCITY_LIMIT SET_STEPPER_ENABLE STATUS Z_OFFSET_APPLY_ENDSTOP " +
-      "M400",
+      "ADXL345 BED_MESH_CALIBRATE BED_MESH_OUTPUT BED_MESH_PROFILE " +
+      "BED_SCREWS_ADJUST BED_TILT_CALIBRATE CANCEL_PRINT DELTA_CALIBRATE " +
+      "ENDSTOP_PHASE_CALIBRATE FIRMWARE_RESTART G0 G1 G2 G3 G17 G18 G19 " +
+      "G28 G90 G91 G92 M18 M73 M82 M83 M84 M104 M105 M106 M107 M109 " +
+      "M112 M114 M115 M117 M140 M190 M191 M204 M220 M221 M400 PAUSE " +
+      "PID_CALIBRATE QUAD_GANTRY_LEVEL RESTART RESPOND RESUME SAVE_CONFIG " +
+      "SCREWS_TILT_CALIBRATE SET_FAN_SPEED SET_FILAMENT_SENSOR " +
+      "SET_GCODE_OFFSET SET_GCODE_VARIABLE SET_HEATER_TEMPERATURE " +
+      "SET_IDLE_TIMEOUT SET_PAUSE_AT_LAYER SET_PAUSE_NEXT_LAYER " +
+      "SET_PRESSURE_ADVANCE SET_STEPPER_ENABLE SET_TEMPERATURE_FAN_TARGET " +
+      "SET_VELOCITY_LIMIT STATUS TEMPERATURE_WAIT TURN_OFF_HEATERS " +
+      "Z_OFFSET_APPLY_ENDSTOP Z_OFFSET_APPLY_PROBE Z_TILT_ADJUST",
   };
 
-  // Jinja2 keywords
+  // Jinja2 Keywords
   const JINJA2_KEYWORDS = {
     keyword:
       "if else elif endif for endfor macro endmacro set include import " +
@@ -48,107 +53,141 @@ export default function (hljs) {
     literal: "true false none null",
   };
 
-  const KLIPPER_COMMENT = {
-    scope: "comment",
-    begin: /[#;]/,
-    end: /$/,
-  };
-
-  // Klipper configuration section
-  const KLIPPER_SECTION = {
-    scope: "section",
-    begin: /^\[[^\]]+\]/,
-    end: /(?=\n\[|\n$)/,
+  return {
+    name: "Klipper Configuration with Jinja2",
+    aliases: ["klipper", "cfg"],
+    keywords: KLIPPER_KEYWORDS,
+    disableAutodetect: true,
     contains: [
+      // Section Headers
       {
-        scope: "section_title",
-        begin: /\[[^\]]+\]/,
+        scope: "title",
+        begin: /^\[[^\]]+\]/,
+        end: /$/,
+        relevance: 10,
       },
+
+      // Comments (`#`, `;`, and `{# ... #}` for Jinja)
+      {
+        scope: "comment",
+        begin: /[#;]/,
+        end: /$/,
+      },
+      {
+        scope: "comment",
+        begin: /\{#/,
+        end: /#\}/,
+      },
+
+      // Attributes (`step_pin:`, `max_temp:`, etc.)
       {
         scope: "attr",
         begin: /^\s*[a-zA-Z_]+(?=\s*:)/m,
         end: /[:=]/,
-        relevance: 0,
-        keywords: KLIPPER_KEYWORDS,
+        excludeEnd: true,
+        contains: [
+          {
+            scope: "number",
+            match: /[-+]?\b\d+(\.\d+)?\b(?![A-Za-z_])/,
+          },
+        ],
       },
-      KLIPPER_COMMENT,
-      hljs.HASH_COMMENT_MODE,
-      hljs.inherit(hljs.NUMBER_MODE, { scope: "number" }),
+
+      // Strings (fixing missing styling)
+      {
+        scope: "string",
+        begin: /"/,
+        end: /"/,
+      },
+      {
+        scope: "string",
+        begin: /'/,
+        end: /'/,
+      },
+
+      // Boolean literals
       {
         scope: "literal",
         keywords: JINJA2_KEYWORDS.literal,
       },
+
+      // Pins (`PA5`, `PB3`, `!PC3`, etc.)
       {
-        scope: "pin",
+        scope: "variable",
         begin: /!?[A-Za-z]+\d+/,
-        relevance: 0,
       },
+
+      // Lists (`[0, 10, 20]`)
       {
         scope: "list",
         begin: /\[/,
         end: /\]/,
+        contains: [hljs.NUMBER_MODE],
+      },
+
+      // G-Code commands (`G0`, `M104`, `M400`, etc.)
+      {
+        scope: "built_in",
+        begin: /\b[GMT]\d+(?:\s+[-+]?\d+(?:\.\d+)?)?\b/,
+      },
+
+      // Jinja2 Blocks `{% ... %}`
+      {
+        scope: "meta",
+        begin: /\{%/,
+        end: /%\}/,
         contains: [
-          hljs.QUOTE_STRING_MODE,
-          hljs.NUMBER_MODE,
           {
-            scope: "literal",
-            keywords: JINJA2_KEYWORDS.literal,
+            scope: "keyword",
+            keywords: JINJA2_KEYWORDS,
+          },
+          {
+            scope: "number",
+            match: /[-+]?\b\d+(\.\d+)?\b(?![A-Za-z_])/,
+          },
+          {
+            scope: "string",
+            begin: /"/,
+            end: /"/,
+          },
+          {
+            scope: "string",
+            begin: /'/,
+            end: /'/,
+          },
+          {
+            scope: "variable",
+            begin: /\{\{/,
+            end: /\}\}/,
           },
         ],
       },
-      {
-        scope: "gcode",
-        begin: /\b[GMT]\d+(?:\s+[-+]?\d+(?:\.\d+)?)?\b/,
-        relevance: 0,
-      },
-    ],
-  };
 
-  // Jinja2 template blocks
-  const JINJA2_TEMPLATE = {
-    scope: "jinja2-block",
-    begin: /\{%/,
-    end: /%\}/,
-    contains: [
-      {
-        scope: "keyword",
-        keywords: JINJA2_KEYWORDS,
-      },
+      // Jinja2 Variables `{{ ... }}`
       {
         scope: "variable",
         begin: /\{\{/,
         end: /\}\}/,
         contains: [
-          hljs.QUOTE_STRING_MODE,
-          hljs.NUMBER_MODE,
           {
+            scope: "keyword",
             keywords: JINJA2_KEYWORDS,
           },
+          {
+            scope: "number",
+            match: /[-+]?\b\d+(\.\d+)?\b(?![A-Za-z_])/,
+          },
+          {
+            scope: "string",
+            begin: /"/,
+            end: /"/,
+          },
+          {
+            scope: "string",
+            begin: /'/,
+            end: /'/,
+          },
         ],
-      },
-    ],
-  };
-
-  // Jinja2 comments
-  const JINJA2_COMMENT = {
-    scope: "comment",
-    begin: /\{#/,
-    end: /#\}/,
-  };
-
-  return {
-    name: "Klipper Configuration with Jinja2",
-    aliases: ["klipper", "cfg"],
-    keywords: KLIPPER_KEYWORDS,
-    contains: [
-      KLIPPER_SECTION,
-      JINJA2_TEMPLATE,
-      JINJA2_COMMENT,
-      hljs.HASH_COMMENT_MODE,
-      {
-        scope: "comment",
-        begin: /;/,
-        end: /$/,
       },
     ],
   };

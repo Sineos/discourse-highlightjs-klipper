@@ -4,5 +4,4 @@ This plugin adds syntax highlighting for Klipper configuration files and Jinja2 
 
 ## Based on
 * https://github.com/discourse/discourse-highlightjs-structured-text
-* https://github.com/mainsail-crew/mainsail/blob/develop/src/plugins/StreamParserKlipperConfig.ts
 
