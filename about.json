@@ -1,6 +1,6 @@
 {
-    "name": "Syntax highlighting for Klipper configuration files and Jinja2 macros",
-    "component": true,
-    "authors": "Sineos",
-    "about_url": "https://github.com/Sineos/discourse-highlightjs-klipper"
-  }
+  "name": "Syntax highlighting for Klipper configuration files and Jinja2 macros",
+  "component": true,
+  "authors": "Sineos",
+  "about_url": "https://github.com/Sineos/discourse-highlightjs-klipper"
+}

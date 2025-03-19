@@ -1,11 +1,4 @@
-/*
-Language: Klipper Configuration with Jinja2 Macros
-Description: Syntax highlighting for Klipper configuration files and Jinja2 templating.
-Author: Sineos
-Version: 0.4
-*/
-
-export default function (hljs) {
+hljs.registerLanguage("klipper", function (hljs) {
   const COMMENT = {
     scope: "comment",
     variants: [
@@ -16,17 +9,17 @@ export default function (hljs) {
   };
 
   const KEY_PART = {
-    scope: "attr",
+    scope: "symbol",
     begin: /^[^=\s]+(?=\s*[:=])/,
   };
 
   const VALUE_PART = {
-    scope: "attribute",
+    scope: "addition",
     begin: /[:=]/,
     end: /$/,
     excludeBegin: true,
     excludeEnd: true,
-    contains: [COMMENT, hljs.inherit(hljs.NUMBER_MODE, { scope: "built_in" })],
+    contains: [COMMENT, hljs.inherit(hljs.NUMBER_MODE, { scope: "number" })],
   };
 
   const SECTION = {
@@ -35,7 +28,7 @@ export default function (hljs) {
     end: /\]/,
     contains: [
       {
-        scope: "strong",
+        scope: "section",
         match: /[^\]]+/,
       },
     ],
@@ -47,7 +40,7 @@ export default function (hljs) {
     end: /%}/,
     contains: [
       {
-        scope: "keyword",
+        scope: "built_in",
         match:
           /\b(if|elif|else|for|endfor|while|endwhile|set|in|params|not|and|trim|round)\b/,
       },
@@ -58,22 +51,22 @@ export default function (hljs) {
   const GCODE_COMMAND = {
     begin: /\b[GMT]\d+\b/, // Match G-code commands like G1, M104
     end: /$/, // Capture the rest of the line
-    scope: "attribute", // Highlight the command itself
+    scope: "deletion", // Highlight the command itself
     contains: [
       {
-        scope: "attribute",
+        scope: "addition",
         match: /\b[XZYEFS]\d*\.?\d*\b/, // Match parameters within the same line
       },
     ],
   };
 
   const INDENTED_BLOCK = {
-    scope: "attr",
+    scope: "deletion",
     begin: /^\s+/,
     end: /$/,
     contains: [
       COMMENT,
-      hljs.inherit(hljs.NUMBER_MODE, { scope: "built_in" }),
+      hljs.inherit(hljs.NUMBER_MODE, { scope: "number" }),
       hljs.QUOTE_STRING_MODE,
       GCODE_COMMAND,
     ],
@@ -93,4 +86,4 @@ export default function (hljs) {
       INDENTED_BLOCK,
     ],
   };
-}
+});
