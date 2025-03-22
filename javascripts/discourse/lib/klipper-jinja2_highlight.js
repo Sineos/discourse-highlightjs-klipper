@@ -72,9 +72,9 @@ export default function (hljs) {
     contains: [
       COMMENT,
       INLINE_COMMENT,
+	  INDENTED_BLOCK,
       SECTION,
       KEY_VALUE_PAIR,
-      INDENTED_BLOCK,
       JINJA2_TEMPLATE,
       hljs.inherit(hljs.QUOTE_STRING_MODE, { scope: "string" }),
       hljs.inherit(hljs.NUMBER_MODE, { scope: "number" }),
