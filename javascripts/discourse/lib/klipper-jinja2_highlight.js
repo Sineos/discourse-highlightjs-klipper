@@ -73,6 +73,7 @@ const COMMENT = {
     contains: [
       COMMENT,
       INLINE_COMMENT,
+	  hljs.HASH_COMMENT_MODE,
       INDENTED_BLOCK,
       SECTION,
       KEY_VALUE_PAIR,
