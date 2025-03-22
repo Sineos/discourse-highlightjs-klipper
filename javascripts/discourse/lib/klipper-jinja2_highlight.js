@@ -1,11 +1,12 @@
 export default function (hljs) {
-  const COMMENT = {
-    scope: "comment",
-    variants: [
-      { begin: /^\s*#/, end: /$/, relevance: 0 }, // Handles indented and standalone comments
-      { begin: /(?<=[\s,])#/, end: /$/, relevance: 0 }, // Handles inline comments AFTER whitespace, or comma
-    ],
-  };
+
+const COMMENT = {
+  scope: "comment",
+  variants: [
+    { begin: /^\s*#/, end: /$/, relevance: 0 }, // Standalone comments
+    { begin: /#(?=\s|\w)/, end: /$/, relevance: 0 }, // Inline comments
+  ],
+};
 
   const INLINE_COMMENT = {
     scope: "comment",
