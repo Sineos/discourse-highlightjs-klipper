@@ -19,7 +19,7 @@ export default function (hljs) {
     match: /^\s*[^\s:]+[:=]/,
     contains: [
       {
-        scope: "attr",
+        scope: "deletion",
         match: /[^\s:]+/,
       },
       {
