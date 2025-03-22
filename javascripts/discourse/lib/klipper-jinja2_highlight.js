@@ -1,14 +1,13 @@
 export default function (hljs) {
-
-const COMMENT = {
-  scope: "comment",
-  variants: [
-    { begin: /^\s*#/, end: /$/, relevance: 0 }, // Standalone comments
-    { begin: /#(?=\s|\w)/, end: /$/, relevance: 0 }, // Inline comments
-    { begin: /(?<=\})\s*#/, end: /$/, relevance: 0 }, // After Jinja2 blocks
-    { begin: /(?<=,)\s*#/, end: /$/, relevance: 0 }, // After comma-separated lists
-  ],
-};
+  const COMMENT = {
+    scope: "comment",
+    variants: [
+      { begin: /^\s*#/, end: /$/, relevance: 0 }, // Standalone comments
+      { begin: /#(?=\s|\w)/, end: /$/, relevance: 0 }, // Inline comments
+      { begin: /(?<=\})\s*#/, end: /$/, relevance: 0 }, // After Jinja2 blocks
+      { begin: /(?<=,)\s*#/, end: /$/, relevance: 0 }, // After comma-separated lists
+    ],
+  };
 
   const INLINE_COMMENT = {
     scope: "comment",
