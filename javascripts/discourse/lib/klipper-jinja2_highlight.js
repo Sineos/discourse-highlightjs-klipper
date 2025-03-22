@@ -3,7 +3,7 @@ export default function (hljs) {
     scope: "comment",
     variants: [
       { begin: /^\s*#/, end: /$/, relevance: 0 }, // Handles indented and standalone comments
-      { begin: /#/, end: /$/, relevance: 0 }, // Handles inline comments
+      { begin: /(?<=[\s,])#/, end: /$/, relevance: 0 }, // Handles inline comments AFTER whitespace, or comma
     ],
   };
 
@@ -72,7 +72,7 @@ export default function (hljs) {
     contains: [
       COMMENT,
       INLINE_COMMENT,
-	  INDENTED_BLOCK,
+      INDENTED_BLOCK,
       SECTION,
       KEY_VALUE_PAIR,
       JINJA2_TEMPLATE,
