@@ -15,7 +15,7 @@ export default function (hljs) {
   };
 
   const KEY_VALUE_PAIR = {
-    scope: "attribute",
+    scope: "addition",
     match: /^\s*[^\s:]+[:=]/,
     contains: [
       {
