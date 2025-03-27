@@ -42,7 +42,11 @@ hljs.registerLanguage("klipper", function (hljs) {
       {
         scope: "built_in",
         match:
-          /\b(if|elif|else|for|endfor|while|endwhile|set|in|params|not|and|trim|round)\b/,
+          /\b(if|elif|else|endif|for|endfor|while|endwhile|set|in|params|not|and|trim|round)\b/,
+      },
+      {
+        scope: "built_in",
+        match: /\b([Tt]rue|[Ff]alse|[Nn]one)\b/,
       },
       hljs.QUOTE_STRING_MODE,
     ],

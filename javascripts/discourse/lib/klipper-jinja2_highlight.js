@@ -2,7 +2,7 @@
 Language: Klipper Configuration with Jinja2 Macros
 Description: Syntax highlighting for Klipper configuration files and Jinja2 templating.
 Author: Sineos
-Version: 0.4
+Version: 0.5
 */
 
 export default function (hljs) {
@@ -49,7 +49,11 @@ export default function (hljs) {
       {
         scope: "keyword",
         match:
-          /\b(if|elif|else|for|endfor|while|endwhile|set|in|params|not|and|trim|round)\b/,
+          /\b(if|elif|else|endif|for|endfor|while|endwhile|set|in|params|not|and|trim|round)\b/,
+      },
+      {
+        scope: "keyword",
+        match: /\b([Tt]rue|[Ff]alse|[Nn]one)\b/,
       },
       hljs.QUOTE_STRING_MODE,
     ],
