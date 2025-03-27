@@ -3,5 +3,5 @@
 This plugin adds syntax highlighting for Klipper configuration files and Jinja2 macros in Discourse.
 
 ## Based on
-* https://github.com/discourse/discourse-highlightjs-structured-text
 
+- https://github.com/discourse/discourse-highlightjs-structured-text
