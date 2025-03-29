@@ -86,7 +86,7 @@ export default function (hljs) {
 
   return {
     name: "Klipper Config",
-    aliases: ["klipper", "cfg"],
+    aliases: ["kcfg", "kmacro"],
     disableAutodetect: true,
     contains: [
       COMMENT,
