@@ -2,7 +2,7 @@
 Language: Klipper Configuration with Jinja2 Macros
 Description: Syntax highlighting for Klipper configuration files and Jinja2 templating.
 Author: Sineos
-Version: 0.5
+Version: 0.6
 */
 
 export default function (hljs) {
